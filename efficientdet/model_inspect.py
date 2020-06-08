@@ -74,6 +74,9 @@ flags.DEFINE_string('saved_model_dir', '/tmp/saved_model',
                     'Folder path for saved model.')
 flags.DEFINE_string('tflite_path', None, 'Path for exporting tflite file.')
 
+# Set the GPU.
+flags.DEFINE_string('gpu', '0', 'The visible GPU id.')
+
 FLAGS = flags.FLAGS
 
 
@@ -459,6 +462,9 @@ def main(_):
     logging.info('Deleting log dir ...')
     tf.io.gfile.rmtree(FLAGS.logdir)
 
+  # set the visible GPU id
+  os.environ["CUDA_VISIBLE_DEVICES"] = FLAGS.gpu
+
   inspector = ModelInspector(
       model_name=FLAGS.model_name,
       logdir=FLAGS.logdir,
@@ -485,6 +491,6 @@ def main(_):
 
 
 if __name__ == '__main__':
-  logging.set_verbosity(logging.WARNING)
+  logging.set_verbosity(logging.INFO)
   tf.disable_eager_execution()
   app.run(main)
